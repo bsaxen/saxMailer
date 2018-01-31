@@ -1,6 +1,8 @@
 <?php
 //===========================
-// Install PHPMailer
+// Author: Benny Saxen
+// Date: 2018-01-31
+// Before usage: Install PHPMailer
 //===========================
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -8,6 +10,17 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
+
+$addr    = $_GET["addr"];  // receiver mail address
+$subject = $_GET["sub"];   // title
+$message = $_GET["msg"];   // body meassage
+//$alias   = $_GET["alias"]; // alias of the sender
+$alias = 'saxMailer';
+
+//======== Configuration ===========
+$sender = 'xxx@gmail.com';
+$passwd = 'xxx';
+//==================================
 
 $mail             = new PHPMailer();
 
@@ -19,17 +32,16 @@ $mail->SMTPAuth   = true;                  // enable SMTP authentication
 $mail->SMTPSecure = "tls";                 
 $mail->Host       = "smtp.gmail.com";      // SMTP server
 $mail->Port       =  587;                   // SMTP port
-$mail->Username   = "sender.name@gmail.com";  // username
-$mail->Password   = "user password";            // password
+$mail->Username   = $sender;  // username
+$mail->Password   = $passwd;            // password
 
-$mail->SetFrom('sender.name@gmail.com', 'IOANT');
+//$mail->SetFrom('sender.name@gmail.com', 'IOANT');
+$mail->SetFrom($sender, $alias);
+$mail->Subject = $subject;
+$mail->MsgHTML($message);
 
-$mail->Subject    = "Heater changed 20 CW";
-
-$mail->MsgHTML('Incresed heater with 20 steps CW');
-
-$address = "receiver.name@gmail.com";
-$mail->AddAddress($address, "Pannan reglerad");
+$address = $addr;
+$mail->AddAddress($address, "whatever");
 
 if(!$mail->Send()) 
 {
